@@ -1,0 +1,529 @@
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #50c878;
+  --accent-color: #f39c12;
+  --background-light: #f5f7fa;
+  --background-dark: #2c3e50;
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --text-muted: #777777;
+  --border-color: #e0e0e0;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode {
+  --primary-color: #64b5f6;
+  --secondary-color: #81c784;
+  --accent-color: #ffd54f;
+  --background-light: #1e272e;
+  --background-dark: #0f1419;
+  --text-light: #ecf0f1;
+  --text-dark: #bdc3c7;
+  --text-muted: #95a5a6;
+  --border-color: #34495e;
+  --shadow: rgba(255, 255, 255, 0.1);
+}
+
+/* General styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  color: var(--text-dark);
+  background-color: var(--background-light);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header styles */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px var(--shadow);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.header ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header ul li {
+  margin-left: 20px;
+}
+
+.header a {
+  color: var(--text-light);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.header a:hover {
+  color: var(--accent-color);
+}
+
+/* Section styles */
+section {
+  padding: 4rem 0;
+  transition: transform 0.3s ease;
+}
+
+section:hover {
+  transform: scale(1.01);
+}
+
+section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+  text-align: center;
+}
+
+/* About section */
+.about-section {
+  background-color: var(--background-light);
+}
+
+.about-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.about-text {
+  flex: 1;
+  margin-right: 2rem;
+}
+
+.about-image {
+  flex: 0 0 200px;
+}
+
+.avatar {
+  width: 100%;
+  height: auto;
+}
+
+/* Skills section */
+.skills-section {
+  background-color: var(--background-light);
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.skill-item {
+  background-color: var(--background-dark);
+  padding: 1rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skill-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px var(--shadow);
+}
+
+.skill-name {
+  color: var(--text-light);
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.skill-bar {
+  height: 10px;
+  background-color: var(--background-light);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.skill-level {
+  height: 100%;
+  background-color: var(--accent-color);
+}
+
+.skill-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+}
+
+/* Projects section */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.project-card {
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px var(--shadow);
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--shadow);
+  }
+}
+
+.project-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.project-link:hover {
+  color: var(--accent-color);
+}
+
+/* Testimonials section */
+.testimonials-section {
+  background-color: var(--background-dark);
+  color: var(--text-light);
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.testimonial-card {
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 16px var(--shadow);
+}
+
+.testimonial-text {
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.testimonial-author {
+  font-weight: bold;
+  text-align: right;
+}
+
+.quote-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+/* Education section */
+.education-section {
+  background-color: var(--background-light);
+}
+
+.education-timeline {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.education-item {
+  border-left: 2px solid var(--primary-color);
+  padding-left: 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.education-item:hover {
+  transform: translateX(5px);
+}
+
+.education-item::before {
+  content: '';
+  width: 15px;
+  height: 15px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  position: absolute;
+  left: -8px;
+  top: 0;
+}
+
+.education-item h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+/* Contact section */
+.contact-section {
+  background-color: var(--background-light);
+}
+
+.contact-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--background-light);
+  color: var(--text-dark);
+}
+
+.form-group input:hover,
+.form-group textarea:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px var(--primary-color);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.submit-button {
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.submit-button:hover {
+  background-color: var(--accent-color);
+  transform: scale(1.05);
+}
+
+/* Footer styles */
+.footer {
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  text-align: center;
+  padding: 1.5rem 0;
+}
+
+.social-icons {
+  margin-top: 1rem;
+}
+
+.social-icon {
+  font-size: 1.5rem;
+  color: var(--text-light);
+  margin: 0 0.5rem;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icon:hover {
+  color: var(--accent-color);
+  transform: scale(1.2);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .header .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header nav {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .header ul {
+    flex-direction: column;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .header ul li {
+    margin-left: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  section h2 {
+    font-size: 2rem;
+  }
+
+  .skills-grid,
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .education-timeline {
+    padding-left: 1rem;
+  }
+
+  .about-content {
+    flex-direction: column;
+  }
+
+  .about-text {
+    margin-right: 0;
+    margin-bottom: 2rem;
+  }
+
+  .about-image {
+    flex: 0 0 150px;
+  }
+
+  .dark-mode-toggle {
+    margin-top: 1rem;
+    margin-left: 0;
+    align-self: flex-start;
+  }
+}
+
+/* Dark mode toggle styles */
+.toggle-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  background-color: #359ee5;
+  border-radius: 15px;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5px;
+}
+
+.toggle-switch.dark {
+  background-color: #34495e;
+}
+
+.toggle-icon {
+  font-size: 16px;
+  z-index: 1;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.toggle-switch.light .sun,
+.toggle-switch.dark .moon {
+  opacity: 1;
+}
+
+.toggle-circle {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 26px;
+  height: 26px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  display: flex;
+  border-radius: 50%;
+  background-color: #f1c40f;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.dark .toggle-circle {
+  transform: translateX(40px);
+  background-color: #ecf0f1;
+}
+
+/* Optional: Add a subtle glow effect */
+.toggle-switch.light .sun {
+  color: #f1c40f;
+  text-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+}
+
+.toggle-switch.dark .moon {
+  color: #ecf0f1;
+  text-shadow: 0 0 5px rgba(236, 240, 241, 0.5);
+}
+
+body.dark-mode {
+  background-color: #222;
+  color: #fff;
+}
+
+/* Add any other dark mode styles for your app here */
+
+/* Icon styles */
+.fas, .fab {
+  margin-right: 0.5rem;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
