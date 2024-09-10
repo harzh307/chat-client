@@ -265,6 +265,7 @@ const Chat = ({ userId }: { userId: string }) => {
                   minute: "2-digit",
                 })}
                 status={(message.sent ? "sent" : message.status) || "pending"}
+                userName={message.userName}
               />
             ))}
           </div>
@@ -323,11 +324,13 @@ const Message = ({
   sender,
   time,
   status,
+  userName,
 }: {
   text: string;
   sender: string;
   time: string;
   status: string;
+  userName: string;
 }) => {
   const getTickClass = () => {
     switch (status) {
@@ -344,6 +347,7 @@ const Message = ({
 
   return (
     <div className={`message ${sender === "me" ? "sent" : "received"}`}>
+      {sender !== "me" && <div className="messageSender">{userName}</div>}
       <div className="messageText">{text}</div>
       <div className="messageTime">
         {time}
