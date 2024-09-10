@@ -145,10 +145,12 @@ const Chat = ({ userId }: { userId: string }) => {
   };
 
   const leaveRoom = () => {
-    socket.emit("leaveRoom", roomId);
-    setIsInRoom(false);
-    setRoomId("");
-    setMessages([]);
+    if (window.confirm("Are you sure you want to leave the room?")) {
+      socket.emit("leaveRoom", roomId);
+      setIsInRoom(false);
+      setRoomId("");
+      setMessages([]);
+    }
   };
 
   const sendMessage = () => {
