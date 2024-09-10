@@ -1,8 +1,13 @@
+import React from "react";
+import ReactDOM from "react-dom";
 import App from "./App.tsx";
-import { createRoot } from "react-dom/client";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration.ts";
 
-const container = document.getElementById("root");
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById("root")
+);
 
-const root = createRoot(container);
-
-root.render(<App tab="home" />);
+serviceWorkerRegistration.register();

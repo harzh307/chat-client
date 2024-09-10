@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import "./Chat.css";
 
-const socket = io(process.env.REACT_APP_SERVER_URL || "http://localhost:9000", { transports: ["websocket"] });
+const socket = io(process.env.REACT_APP_SERVER_URL || "http://localhost:9000", {
+  transports: ["websocket"],
+});
 
 interface Message {
   id: string;
@@ -13,6 +15,7 @@ interface Message {
   sent?: boolean;
   roomId: string;
 }
+// ... other imports
 
 const Chat = ({ userId }: { userId: string }) => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -25,6 +28,10 @@ const Chat = ({ userId }: { userId: string }) => {
   const [errors, setErrors] = useState({ name: "", email: "", roomId: "" });
   const [userName, setUserName] = useState("");
   const [darkMode, setDarkMode] = useState(false);
+  const messageListRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   useEffect(() => {
     socket.on("newMessage", (message: Message) => {
@@ -60,6 +67,20 @@ const Chat = ({ userId }: { userId: string }) => {
       console.error("Socket error:", error);
     });
 
+    const handleResize = () => {
+      const newViewportHeight = window.innerHeight;
+      setViewportHeight(newViewportHeight);
+      
+      // Check if keyboard is open
+      if (newViewportHeight < viewportHeight) {
+        setIsKeyboardOpen(true);
+      } else {
+        setIsKeyboardOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
     if (darkMode) {
       document.body.classList.add("dark-mode");
     } else {
@@ -73,8 +94,19 @@ const Chat = ({ userId }: { userId: string }) => {
       socket.off("joinedRoom");
       socket.off("error");
       document.body.classList.remove("dark-mode");
+      window.removeEventListener("resize", handleResize);
     };
-  }, [userId, roomId, name, darkMode]);
+  }, [userId, roomId, name, darkMode, viewportHeight]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    if (messageListRef.current) {
+      messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    }
+  };
 
   const validateFields = () => {
     let isValid = true;
@@ -141,8 +173,19 @@ const Chat = ({ userId }: { userId: string }) => {
     setDarkMode(!darkMode);
   };
 
+  const handleInputFocus = () => {
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 100);
+  };
+
   return (
-    <div className={`chatContainer ${darkMode ? "dark-mode" : ""}`}>
+    <div
+      className={`chatContainer ${darkMode ? "dark-mode" : ""} ${isKeyboardOpen ? "keyboard-open" : ""}`}
+      style={{ height: `${viewportHeight}px` }}
+    >
       <div className="chatHeader">
         <div className="userInfo">
           <h2>Group: {isInRoom ? roomId : "Not Connected"}</h2>
@@ -153,11 +196,18 @@ const Chat = ({ userId }: { userId: string }) => {
                 : `${messages.length} messages`
               : "Offline"}
           </span>
-          {name}
         </div>
-        <button onClick={toggleDarkMode} className="toggleMode">
-          {darkMode ? "☀️" : "🌙"}
-        </button>
+        <div className="headerRight">
+          {isInRoom && (
+            <button onClick={leaveRoom} className="leaveButton">
+              Leave Room
+            </button>
+          )}
+          {isInRoom && <span className="userName">{name}</span>}
+          <button onClick={toggleDarkMode} className="toggleMode">
+            {darkMode ? "☀️" : "🌙"}
+          </button>
+        </div>
       </div>
       {!isInRoom ? (
         <div className={"joinForm"}>
@@ -191,7 +241,7 @@ const Chat = ({ userId }: { userId: string }) => {
         </div>
       ) : (
         <div className="chatScreen">
-          <div className="messageList">
+          <div className="messageList" ref={messageListRef}>
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -213,24 +263,33 @@ const Chat = ({ userId }: { userId: string }) => {
             ))}
           </div>
           <div className={"inputArea"}>
+            <button className={"attachButton"}>
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+              </svg>
+            </button>
             <input
+              ref={inputRef}
               type="text"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={(e) => {
-                if (e.key === "Enter") sendMessage();
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  sendMessage();
+                }
                 handleTyping();
               }}
+              onFocus={handleInputFocus}
               placeholder="Type a message..."
               className={"messageInput"}
             />
             <button onClick={sendMessage} className={"sendButton"}>
-              Send
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+              </svg>
             </button>
           </div>
-          <button onClick={leaveRoom} className={"leaveButton"}>
-            Leave Room
-          </button>
         </div>
       )}
     </div>
