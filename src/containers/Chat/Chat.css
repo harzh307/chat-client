@@ -3,7 +3,7 @@
 :root {
   --bg-color: #e5ddd5;
   --chat-bg: #f0f2f5;
-  --sent-bg: #dcf8c6;
+  --sent-bg: #dcf8c6; /* Change this to a slightly darker shade */
   --received-bg: #ffffff;
   --text-color: #303030;
   --time-color: #667781;
@@ -41,6 +41,7 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   background-color: var(--chat-bg);
   transition: padding-bottom 0.3s ease;
+  position: relative; /* Add this line */
 }
 
 .chatHeader {
@@ -172,9 +173,10 @@ body {
 .message.sent {
   align-self: flex-end;
   background-color: var(--sent-bg);
-  color: #fff;
+  color: var(--text-color); /* Change this line */
   margin-left: auto;
   border-top-right-radius: 0;
+  padding-right: 24px; /* Increase padding to accommodate ticks */
 }
 
 .message.received {
@@ -202,10 +204,12 @@ body {
   position: absolute;
   bottom: 4px;
   right: 7px;
+  display: flex;
+  align-items: center;
 }
 
 .inputArea {
-  position: fixed;
+  position: absolute; /* Change from fixed to absolute */
   bottom: 0;
   left: 0;
   right: 0;
@@ -282,23 +286,19 @@ body {
     max-width: none;
     border: none;
     box-shadow: none;
-    padding-bottom: 60px; /* Default padding */
+    padding-bottom: 0; /* Remove default padding */
   }
 
   .chatContainer.keyboard-open {
-    padding-bottom: 0; /* Remove padding when keyboard is open */
+    padding-bottom: 0;
   }
 
   .messageList {
-    padding-bottom: 80px;
+    padding-bottom: 60px; /* Reduce padding */
   }
 
   .inputArea {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 8px;
+    position: fixed; /* Keep it fixed for mobile */
   }
 
   .attachButton, .sendButton {
@@ -395,4 +395,59 @@ body {
 
 .dark-mode .messageTime {
   color: rgba(255, 255, 255, 0.6);
+}
+
+/* Add these new rules */
+.light-mode .message.sent {
+  color: #303030; /* Darker text color for better contrast in light mode */
+}
+
+.dark-mode .message.sent {
+  color: #fff; /* Keep white text for dark mode */
+}
+
+.messageStatus {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 14px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.tick {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  vertical-align: middle;
+}
+
+.single-tick {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23667781" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+}
+
+.double-tick {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23667781" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l-5 5-3-3"/><path d="M17 8l-5 5-3-3"/></svg>');
+}
+
+.blue-tick {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%234FC3F7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l-5 5-3-3"/><path d="M17 8l-5 5-3-3"/></svg>');
+}
+
+.messageTime {
+  font-size: 11px;
+  color: var(--time-color);
+  position: absolute;
+  bottom: 4px;
+  right: 7px;
+  display: flex;
+  align-items: center;
+}
+
+.emojiPickerContainer {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  z-index: 1;
 }

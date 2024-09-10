@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import "./Chat.css";
+import EmojiPicker from 'emoji-picker-react'; // Add this import
 
 const socket = io(process.env.REACT_APP_SERVER_URL || "http://localhost:9000", {
   transports: ["websocket"],
@@ -14,6 +15,7 @@ interface Message {
   timestamp: number;
   sent?: boolean;
   roomId: string;
+  status?: string; // Add this line
 }
 // ... other imports
 
@@ -32,6 +34,7 @@ const Chat = ({ userId }: { userId: string }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   useEffect(() => {
     socket.on("newMessage", (message: Message) => {
@@ -70,7 +73,7 @@ const Chat = ({ userId }: { userId: string }) => {
     const handleResize = () => {
       const newViewportHeight = window.innerHeight;
       setViewportHeight(newViewportHeight);
-      
+
       // Check if keyboard is open
       if (newViewportHeight < viewportHeight) {
         setIsKeyboardOpen(true);
@@ -176,14 +179,24 @@ const Chat = ({ userId }: { userId: string }) => {
   const handleInputFocus = () => {
     setTimeout(() => {
       if (inputRef.current) {
-        inputRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+        inputRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
       }
     }, 100);
   };
 
+  const handleEmojiClick = (emojiObject: any) => {
+    setInputMessage(prevInput => prevInput + emojiObject.emoji);
+    setShowEmojiPicker(false);
+  };
+
   return (
     <div
-      className={`chatContainer ${darkMode ? "dark-mode" : ""} ${isKeyboardOpen ? "keyboard-open" : ""}`}
+      className={`chatContainer ${darkMode ? "dark-mode" : ""} ${
+        isKeyboardOpen ? "keyboard-open" : ""
+      }`}
       style={{ height: `${viewportHeight}px` }}
     >
       <div className="chatHeader">
@@ -242,32 +255,36 @@ const Chat = ({ userId }: { userId: string }) => {
       ) : (
         <div className="chatScreen">
           <div className="messageList" ref={messageListRef}>
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`message ${
-                  message.userId === userId ? "sent" : "received"
-                }`}
-              >
-                {message.userId !== userId && (
-                  <div className="messageSender">{message.userName}</div>
-                )}
-                <div className="messageText">{message.text}</div>
-                <span className="messageTime">
-                  {new Date(message.timestamp).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </div>
+            {messages.map((message, index) => (
+              <Message
+                key={index}
+                text={message.text}
+                sender={message.userId === userId ? "me" : message.userName}
+                time={new Date(message.timestamp).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+                status={(message.sent ? "sent" : message.status) || "pending"}
+              />
             ))}
           </div>
           <div className={"inputArea"}>
-            <button className={"attachButton"}>
+            <button 
+              className={"attachButton"} 
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
               <svg viewBox="0 0 24 24" width="24" height="24">
-                <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                <path
+                  fill="currentColor"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
+                />
               </svg>
             </button>
+            {showEmojiPicker && (
+              <div className="emojiPickerContainer">
+                <EmojiPicker onEmojiClick={handleEmojiClick} />
+              </div>
+            )}
             <input
               ref={inputRef}
               type="text"
@@ -286,7 +303,10 @@ const Chat = ({ userId }: { userId: string }) => {
             />
             <button onClick={sendMessage} className={"sendButton"}>
               <svg viewBox="0 0 24 24" width="24" height="24">
-                <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                <path
+                  fill="currentColor"
+                  d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+                />
               </svg>
             </button>
           </div>
@@ -297,3 +317,40 @@ const Chat = ({ userId }: { userId: string }) => {
 };
 
 export default Chat;
+
+const Message = ({
+  text,
+  sender,
+  time,
+  status,
+}: {
+  text: string;
+  sender: string;
+  time: string;
+  status: string;
+}) => {
+  const getTickClass = () => {
+    switch (status) {
+      case "sent":
+        return "single-tick";
+      case "delivered":
+        return "double-tick";
+      case "read":
+        return "blue-tick";
+      default:
+        return "";
+    }
+  };
+
+  return (
+    <div className={`message ${sender === "me" ? "sent" : "received"}`}>
+      <div className="messageText">{text}</div>
+      <div className="messageTime">
+        {time}
+        {sender === "me" && (
+          <span className={`messageStatus tick ${getTickClass()}`}></span>
+        )}
+      </div>
+    </div>
+  );
+};
